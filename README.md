@@ -1,83 +1,68 @@
-Проблема з різним шрифтом та дивними символами виникає через копіювання тексту з різних джерел або неправильне кодування.
 
-Ось чистий, правильний README.md:
 # OAuth2 Authentication Service
 
-## Зміст
-- [Локальний запуск](#локальний-запуск)
-- [Запуск через Docker](#запуск-через-docker)
-- [Приклади запитів](#приклади-запитів)
-- [Тестові облікові дані](#тестові-облікові-дані)
 
-## Локальний запуск
 
-### 1. Клонування та встановлення залежностей
 ```bash
+# Клонувати та встановити залежності
 git clone <посилання-на-репозиторій>
 cd oauth2-service
 npm install
 
-2. Налаштування змінних оточення
-
-Створіть файл .env у корені проекту:
-PORT=3000
-JWT_SECRET=your_super_secret_jwt_key_here
-ADMIN_PASSWORD=admin123
-USER_PASSWORD=password
-
-3. Запуск сервера
-# Режим розробки
-npm run dev
-
-# Або продакшн режим
+# Запустити сервер
 npm start
 
-Запуск через Docker
+ Приклади запитів (їх можна одразу використати)
 
-Варіант 1: Без docker-compose
-docker build -t oauth2-app .
-docker run -p 3000:3000 oauth2-app
+ Отримання токенів
 
-Варіант 2: З docker-compose
-docker-compose up
-
-Приклади запитів
-
-Автентифікація
-
-Успішний login для user
+User токен:
 curl -X POST http://localhost:3000/login \
   -H "Content-Type: application/json" \
   -d '{"username": "user", "password": "password"}'
 
-Успішний login для admin
+Admin токен:
 curl -X POST http://localhost:3000/login \
   -H "Content-Type: application/json" \
   -d '{"username": "admin", "password": "admin123"}'
 
-Доступ до захищених ресурсів
+ Збережіть токен з відповіді для наступних запитів!
 
-Запит профілю без токена (401 Unauthorized)
+ Тестування доступу до профілю
+
+Без токена (має бути 401):
 curl http://localhost:3000/profile
 
-Запит профілю з токеном (200 OK)
+З токеном (має бути 200):
 curl http://localhost:3000/profile \
-  -H "Authorization: Bearer YOUR_ACCESS_TOKEN_HERE"
+  -H "Authorization: Bearer ВСТАВТЕ_ВАШ_ТОКЕН_ТУТ"
 
-Тестування рівнів доступу
+Тестування ролей
 
-DELETE запит з токеном user (403 Forbidden)
+User намагається видалити (має бути 403):
 curl -X DELETE http://localhost:3000/users/123 \
-  -H "Authorization: Bearer USER_ACCESS_TOKEN_HERE"
+  -H "Authorization: Bearer USER_ТОКЕН"
 
-DELETE запит з токеном admin (200 OK)
+Admin видаляє (має бути 200):
 curl -X DELETE http://localhost:3000/users/123 \
-  -H "Authorization: Bearer ADMIN_ACCESS_TOKEN_HERE"
+  -H "Authorization: Bearer ADMIN_ТОКЕН"
 
-Тестові облікові дані
+ Тестові обліковкі
 
-Роль Логін Пароль
-User user password
-Admin admin admin123
+· User: user / password
+· Admin: admin / admin123
 
-Сервер доступний за адресою: http://localhost:3000
+ Docker запуск
+docker-compose up
+# або
+docker run -p 3000:3000 oauth2-app
+
+
+
+Сервер працює на: http://localhost:3000
+
+Тепер можна просто:
+1. Скопіювати будь-який запит
+2. Вставити в термінал  
+3. Замінити `ВСТАВТЕ_ВАШ_ТОКЕН_ТУТ` на реальний токен
+4. Виконати! 
